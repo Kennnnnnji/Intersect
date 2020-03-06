@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <set>
 #include "line.h"
 
 using namespace std;
@@ -7,15 +8,23 @@ using namespace std;
 int main() {
 	int n;
 	char c;
-	vector<Line *> lineSet;
+	vector<Line *> lineVec;
 	cin >> n;
 	while (n--) {
 		int x1, y1, x2, y2;
 		cin >> c >> x1 >> y1 >> x2 >> y2;
 		Line* newLine = new Line(x1, y1, x2, y2);
-		lineSet.push_back(newLine);
-		newLine->show();
+		lineVec.push_back(newLine);
+		//newLine->show();
 	}
-	(*lineSet.begin())->getCross(lineSet.back())->show();
+	set<Point*> pointSet;
+	//(*lineVec.begin())->getCross(lineVec.back())->show();
+	for (vector<Line*>::iterator iter = lineVec.begin(); iter != lineVec.end(); iter++) {
+		for (auto iter2 = iter + 1; iter2 != lineVec.end(); iter2++) {
+			Point* p = (*iter)->getCross(*iter2);
+			if (p->valid) pointSet.insert(p);
+		}
+	}
+	cout << pointSet.size();
 	system("pause");
 }

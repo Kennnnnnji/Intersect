@@ -7,6 +7,7 @@ public:
 	bool valid = false;
 	Point() {};
 	Point(double x, double y) {
+		valid = true;
 		this->x = x;
 		this->y = y;
 	}

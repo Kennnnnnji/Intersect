@@ -35,6 +35,8 @@ Point* Line::getCross(Line* l2) {
 }
 
 Point* Line::setX(double x) {
-	if (vertical) return new Point(vertical_x, 0);
+	if (vertical) {
+		std::cerr << "vertical in setX()" << std::endl;
+	}
 	return new Point(x, k * x + b);
 }
