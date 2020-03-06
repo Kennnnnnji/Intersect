@@ -18,7 +18,6 @@ int main() {
 		//newLine->show();
 	}
 	set<Point*> pointSet;
-	//(*lineVec.begin())->getCross(lineVec.back())->show();
 	for (vector<Line*>::iterator iter = lineVec.begin(); iter != lineVec.end(); iter++) {
 		for (auto iter2 = iter + 1; iter2 != lineVec.end(); iter2++) {
 			Point* p = (*iter)->getCross(*iter2);
@@ -26,5 +25,5 @@ int main() {
 		}
 	}
 	cout << pointSet.size();
-	system("pause");
+	return 0;
 }
