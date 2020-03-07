@@ -1,23 +1,6 @@
 #pragma once
 #include <iostream>
-
-class Point {
-public:
-	double x, y;
-	bool valid = false;
-	Point() {};
-	Point(double x, double y) {
-		valid = true;
-		this->x = x;
-		this->y = y;
-	}
-	bool equal(Point pp) {
-		return (this->x == pp.x && this->y == pp.y);
-	}
-	void show() {
-		std::cout << "(" << x << "," << y << ")" << std::endl;
-	}
-};
+#include "point.h"
 
 class Line {
 public:
