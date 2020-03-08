@@ -20,25 +20,15 @@ struct Point {
         printf("(%.20f, %.20f)\n", x, y);
 		//std::cout << "(" << x << "," << y << ")" << std::endl;
 	}
-    void setCoords(double x, double y) {
-        this->x = x, this->y = y;
-    }
     Point sub(Point p2) {
         return Point((double)x - p2.x, (double)y - p2.y);
     }
     Point add(Point p2) {
         return Point((double)x + p2.x, (double)y + p2.y);
     }
-    double distance(Point p2) {
+    double getDistance(Point p2) {
         return sqrt(((double)x - p2.x) * ((double)x - p2
             .x) + ((double)y - p2.y) * ((double)y - p2.y));
-    }
-    Point normal() {
-        double length = sqrt(x * x + y * y);
-        return Point(x / length, y / length);
-    }
-    double norm() const {
-        return (double)sqrt(x * x + y * y);
     }
     Point scale(double s) {
         return Point(x * s, y * s);
