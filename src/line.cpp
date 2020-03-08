@@ -15,11 +15,11 @@ void Line::show() {
 	cout << k << " " << b << endl;
 }
 
-Point* Line::getCross(Line* l2) {
+Point Line::getCross(Line* l2) {
 	// parallel
 	if (vertical && l2->vertical || 
 		(!vertical && !l2->vertical && this->k == l2->k)) {
-		return new Point();
+		return Point();
 	}
 	// cross
 	if (vertical) {
@@ -27,16 +27,14 @@ Point* Line::getCross(Line* l2) {
 	} else if (l2->vertical) {
 		return setX(vertical_x);
 	}
-	Point* p = new Point();
-	p->x = (b - l2->b) / (l2->k - k);
-	p->y = k * p->x + b;
-	p->valid = true;
+	double x = (b - l2->b) / (l2->k - k);
+	Point p = Point(x, k * x + b);
 	return p;
 }
 
-Point* Line::setX(double x) {
+Point Line::setX(double x) {
 	if (vertical) {
 		std::cerr << "vertical in setX()" << std::endl;
 	}
-	return new Point(x, k * x + b);
+	return Point(x, k * x + b);
 }
