@@ -3,10 +3,10 @@
 Line::Line(int x1, int y1, int x2, int y2) {
 	if (x1 == x2) {
 		vertical = true;
-		vertical_x = x1;
+		vertical_x = (double)x1;
 	} else {
-		k = ((double)y1 - y2) / ((double)x1 - x2);
-		b = (double)y1 - k * x1;
+		k = ((double)y1 - (double)y2) / ((double)x1 - (double)x2);
+		b = (double)y1 - (double)k * (double)x1;
 	}
 }
 

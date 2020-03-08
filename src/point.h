@@ -8,7 +8,7 @@ struct Point {
 	Point() {};
 	Point(double x, double y) {
 		valid = true;
-        const long long plus = 100000000000;
+        const long long plus = 10000000000;
         long long a2 = (long long)(x * plus + 0.5);
 		//this->x = x;
 		this->x = a2 / (double)plus;
