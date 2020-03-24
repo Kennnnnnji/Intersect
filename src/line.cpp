@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "line.h"
+#include <fstream>
 
 Line::Line() {}
 
@@ -89,4 +90,47 @@ Point Line::setX(double x) {
 		std::cerr << "vertical in setX()" << std::endl;
 	}
 	return Point(x, k * x + b);
+}
+
+Point Line::setY(double y) {
+	if (k == 0) {
+		std::cerr << "vertical in setY()" << std::endl;
+	}
+	if (vertical) return Point(vertical_x, y);
+	return Point((y - b) / k, y);
+}
+
+void Line::printData(ofstream& ofs) {
+	double off = 360;
+	switch (lineType) {
+		case LineType::Line:
+			if (abs(k) <= 1 && !vertical) {
+				ofs << "L " << -off << " " << setX(-off).y << " " << off << " "
+					<< setX(off).y << endl;
+			} else {
+				ofs << "L "<< " " << setY(-off).x << -off << " " <<
+					setY(off).x << " " << off << endl;
+			}
+			break;
+		case LineType::Ray:
+			ofs << "R " << A.x << " " << A.y << " ";
+			if (abs(k) <= 1 && !vertical) {
+				if (B.x > A.x)
+					ofs << off << " " <<  setX(off).y << endl;
+				else
+					ofs << -off << " " << setX(-off).y << endl;
+			} else {
+				if (B.y > A.y)
+					ofs << setY(off).x << " " << off << endl;
+				else
+					ofs << setY(-off).x << " " << -off << endl;
+			}
+			break;
+		case LineType::Segment:
+			ofs << "S " << A.x << " " << A.y << " " << B.x << " " <<
+				B.y << endl;
+			break;
+		default:
+			break;
+	}
 }
