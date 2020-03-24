@@ -1,6 +1,21 @@
+#include "pch.h"
 #include "line.h"
 
-Line::Line(int x1, int y1, int x2, int y2) {
+Line::Line() {}
+
+Line::Line(int x1, int y1, int x2, int y2, LineType t) {
+	type = shapeType::Line;
+	lineType = t;
+	A = Point(x1, y1);
+	B = Point(x2, y2);
+	V = B.sub(A);
+	oA = A, oB = B;
+	// x, y little front
+	if (x1 > x2 || x1 == x2 && y1 > y2) {
+		auto tmp = A;
+		A = B;
+		B = tmp;
+	}
 	if (x1 == x2) {
 		vertical = true;
 		vertical_x = (double)x1;
@@ -22,13 +37,50 @@ Point Line::getCross(Line* l2) {
 		return Point();
 	}
 	// cross
+	Point p;
 	if (vertical) {
-		return l2->setX(vertical_x);
+		p =  l2->setX(vertical_x);
 	} else if (l2->vertical) {
-		return setX(vertical_x);
+		p = setX(vertical_x);
 	}
 	double x = (b - l2->b) / (l2->k - k);
-	Point p = Point(x, k * x + b);
+	p = Point(x, k * x + b);
+	Point p2 = p.sub(oA);
+	switch (this->lineType)
+	{
+	case LineType::Ray:
+		p.valid = p2.pointMul(V) >= 0;
+		break;
+	case Line::LineType::Line: 
+		p.valid = true;
+		break;
+	case LineType::Segment:
+		p.valid = p.x >= A.x && p.x <= B.x && 
+			(p.y >= A.y && p.y <= B.y || p.y >= B.y && p.y <= A.y);
+		break;
+	default:
+		p.valid = false;
+		break;
+	}
+	if (p.valid) {
+		Point p2 = p.sub(l2->oA);
+		switch (l2->lineType) 
+		{
+		case LineType::Line:
+			p.valid = true;
+			break;
+		case LineType::Ray:
+			p.valid = p2.pointMul(l2->V) >= 0;
+			break;
+		case LineType::Segment:
+			p.valid = p.x >= A.x && p.x <= B.x && 
+				(p.y >= A.y && p.y <= B.y || p.y >= B.y && p.y <= A.y);
+			break;
+		default:
+			p.valid = false;
+			break;
+		}
+	}
 	return p;
 }
 

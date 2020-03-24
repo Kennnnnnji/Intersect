@@ -11,7 +11,9 @@ class Circle : public Shape {
 public:
 	Point P;
 	double r;
+	Circle() {};
     Circle(Point P, double r) {
+		type = shapeType::Circle;
         this->P = P;
         this->r = r;
     }
@@ -50,11 +52,36 @@ static pointPair getCrossPoints(Circle* cir, Line* l) {
 	}
 	double k = l->k, b = l->b;
 	double cx = cir->P.x, cy = cir->P.y, r = cir->r;
+	Point p3;
 	if (l->vertical) {
+		// TODO wrong
 		double delta = r * r - (l->vertical_x - cx) * (l->vertical_x - cx);
 		delta = sqrt(delta);
 		double x1 = l->vertical_x;
-		return pointPair(Point(x1, b + delta), Point(x1, b - delta));
+		Point p1(x1, cir->P.y + delta); 
+		Point p2(x1, cir->P.y - delta);
+		
+		switch (l->lineType)
+		{
+		case Line::LineType::Line:
+			p1.valid = true;
+			p2.valid = true;
+			break;
+		case Line::LineType::Ray:
+			p3 = p1.sub(l->oA);
+			p1.valid = p3.pointMul(l->V) >= 0;
+			p3 = p2.sub(l->oA);
+			p2.valid = p3.pointMul(l->V) >= 0;
+			break;
+		case Line::LineType::Segment:
+			p1.valid = p1.x >= l->A.x && p1.x <= l->B.x && p1.y >= l->A.y && p1.y <= l->B.y;
+			p2.valid = p2.x >= l->A.x && p2.x <= l->B.x && p2.y >= l->A.y && p2.y <= l->B.y;
+			break;
+		default:
+			p1.valid = p2.valid = false;
+			break;
+		}
+		return pointPair(p1, p2);
 	}
 
 	double P = cx * cx + (b - cy) * (b - cy) - r * r;
@@ -64,8 +91,30 @@ static pointPair getCrossPoints(Circle* cir, Line* l) {
 	double x1, y1, x2, y2;
 	x1 = ((double)b1 + c1) / (2 * a);
 	y1 = k * x1 + b;
-	x2 = (b1 - c1) / (2 * a);
+	x2 = ((double)b1 - c1) / (2 * a);
 	y2 = k * x2 + b;
-	return pointPair(Point(x1, y1), Point(x2, y2));
+	Point p1(x1, y1);
+	Point p2(x2, y2);
+	switch (l->lineType)
+	{
+	case Line::LineType::Line:
+		p1.valid = true;
+		p2.valid = true;
+		break;
+	case Line::LineType::Ray:
+		p3 = p1.sub(l->oA);
+		p1.valid = p3.pointMul(l->V) >= 0;
+		p3 = p2.sub(l->oA);
+		p2.valid = p3.pointMul(l->V) >= 0;
+		break;
+	case Line::LineType::Segment:
+		p1.valid = x1 >= l->A.x && x1 <= l->B.x && y1 >= l->A.y && y1 <= l->B.y;
+		p2.valid = x2 >= l->A.x && x2 <= l->B.x && y2 >= l->A.y && y2 <= l->B.y;
+		break;
+	default:
+		p1.valid = p2.valid = false;
+		break;
+	}
+	return pointPair(p1, p2);
 }
 
